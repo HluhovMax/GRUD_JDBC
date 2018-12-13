@@ -17,6 +17,9 @@
             <column name="resume" type="BLOB">
                 <constraints nullable="true"/>
             </column>
+            <column name="bio" type="BLOB">
+                <constraints nullable="true"/>
+            </column>
         </createTable>
     </changeSet>
 
