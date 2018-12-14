@@ -1,0 +1,46 @@
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+    <changeSet id="addFK for developer_skill.developer_id" author="holosievo@gmail.com">
+        <addForeignKeyConstraint baseTableName="developer_skill" baseColumnNames="developer_id" constraintName="fk_developer_skill_developer" referencedTableName="developer"
+                                 referencedColumnNames="id"/>
+    </changeSet>
+    <changeSet id="addFK for developer_skill.skill_id" author="holosievo@gmail.com">
+        <addForeignKeyConstraint baseTableName="developer_skill" baseColumnNames="skill_id" constraintName="fk_developer_skill_skill" referencedTableName="skill"
+                                 referencedColumnNames="id"/>
+    </changeSet>
+    <changeSet id="addFK for project_developer.project_id" author="holosievo@gmail.com">
+        <addForeignKeyConstraint baseTableName="project_developer" baseColumnNames="project_id" constraintName="fk_project_developer_project" referencedTableName="project"
+                                 referencedColumnNames="id"/>
+    </changeSet>
+    <changeSet id="addFK for project_developer.developer_id" author="holosievo@gmail.com">
+        <addForeignKeyConstraint baseTableName="project_developer" baseColumnNames="developer_id" constraintName="fk_project_developer_developer" referencedTableName="developer"
+                                 referencedColumnNames="id"/>
+    </changeSet>
+    <changeSet id="addFK for company_project.company_id" author="holosievo@gmail.com">
+        <addForeignKeyConstraint baseTableName="company_project" baseColumnNames="company_id" constraintName="fk_company_project_company" referencedTableName="company"
+                                 referencedColumnNames="id"/>
+    </changeSet>
+    <changeSet id="addFK for company_project.project_id" author="holosievo@gmail.com">
+        <addForeignKeyConstraint baseTableName="company_project" baseColumnNames="project_id" constraintName="fk_company_project_project" referencedTableName="project"
+                                 referencedColumnNames="id"/>
+    </changeSet>
+    <changeSet id="addFK for company_customer.company_id" author="holosievo@gmail.com">
+        <addForeignKeyConstraint baseTableName="company_customer" baseColumnNames="company_id" constraintName="fk_company_customer_company" referencedTableName="company"
+                                 referencedColumnNames="id"/>
+    </changeSet>
+    <changeSet id="addFK for company_customer.customer_id" author="holosievo@gmail.com">
+        <addForeignKeyConstraint baseTableName="company_customer" baseColumnNames="customer_id" constraintName="fk_company_customer_customer" referencedTableName="customer"
+                                 referencedColumnNames="id"/>
+    </changeSet>
+    <changeSet id="addFK for customer_project.customer_id" author="holosievo@gmail.com">
+        <addForeignKeyConstraint baseTableName="customer_project" baseColumnNames="customer_id" constraintName="fk_customer_project_customer" referencedTableName="customer"
+                                 referencedColumnNames="id"/>
+    </changeSet>
+    <changeSet id="addFK for customer_project.project_id" author="holosievo@gmail.com">
+        <addForeignKeyConstraint baseTableName="customer_project" baseColumnNames="project_id" constraintName="fk_fk_customer_project_project" referencedTableName="project"
+                                 referencedColumnNames="id"/>
+    </changeSet>
+</databaseChangeLog>

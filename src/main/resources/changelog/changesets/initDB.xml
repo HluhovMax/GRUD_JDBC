@@ -3,7 +3,7 @@
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
          http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
-    <changeSet id="1" author="holosievo@gmail.com" dbms="mysql">
+    <changeSet id="initializing mydb" author="holosievo@gmail.com" dbms="mysql">
         <createTable tableName="developer">
             <column name="id" type="int" autoIncrement="true">
                 <constraints primaryKey="true" nullable="false"/>
@@ -11,6 +11,9 @@
             <column name="name" type="varchar(30)"/>
             <column name="specialty" type="varchar(30)"/>
             <column name="experience" type="int">
+                <constraints nullable="false"/>
+            </column>
+            <column name="salary" type="int">
                 <constraints nullable="false"/>
             </column>
         </createTable>
@@ -40,54 +43,43 @@
         </createTable>
         <createTable tableName="developer_skill">
             <column name="developer_id" type="int">
-                <constraints primaryKey="true" nullable="false" foreignKeyName="developer_id"
-                             references="developer(id)" deleteCascade="true"/>
+                <constraints primaryKey="true" nullable="false"/>
             </column>
             <column name="skill_id" type="int" >
-                <constraints primaryKey="true" nullable="false" foreignKeyName="skill_id"
-                             references="skill(id)" deleteCascade="true"/>
+                <constraints primaryKey="true" nullable="false"/>
             </column>
         </createTable>
         <createTable tableName="project_developer">
             <column name="project_id" type="int" >
-                <constraints primaryKey="true" nullable="false" foreignKeyName="project_id"
-                             references="project(id)" deleteCascade="true"/>
+                <constraints primaryKey="true" nullable="false" />
             </column>
             <column name="developer_id" type="int">
-                <constraints primaryKey="true" nullable="false" foreignKeyName="developer_id"
-                             references="developer(id)" deleteCascade="true"/>
+                <constraints primaryKey="true" nullable="false" />
             </column>
         </createTable>
         <createTable tableName="company_project">
             <column name="company_id" type="int">
-                <constraints primaryKey="true" nullable="false" foreignKeyName="company_id"
-                             references="company(id)" deleteCascade="true"/>
+                <constraints primaryKey="true" nullable="false" />
             </column>
             <column name="project_id" type="int" >
-                <constraints primaryKey="true" nullable="false" foreignKeyName="project_id"
-                             references="project(id)" deleteCascade="true"/>
+                <constraints primaryKey="true" nullable="false" />
             </column>
         </createTable>
         <createTable tableName="company_customer">
             <column name="company_id" type="int">
-                <constraints primaryKey="true" nullable="false" foreignKeyName="company_id"
-                             references="company(id)" deleteCascade="true"/>
+                <constraints primaryKey="true" nullable="false" />
             </column>
             <column name="customer_id" type="int" >
-                <constraints primaryKey="true" nullable="false" foreignKeyName="customer_id"
-                             references="customer(id)" deleteCascade="true"/>
+                <constraints primaryKey="true" nullable="false" />
             </column>
         </createTable>
         <createTable tableName="customer_project">
             <column name="customer_id" type="int" >
-                <constraints primaryKey="true" nullable="false" foreignKeyName="customer_id"
-                             references="customer(id)" deleteCascade="true"/>
+                <constraints primaryKey="true" nullable="false" />
             </column>
             <column name="project_id" type="int" >
-                <constraints primaryKey="true" nullable="false" foreignKeyName="project_id"
-                             references="project(id)" deleteCascade="true"/>
+                <constraints primaryKey="true" nullable="false" />
             </column>
         </createTable>
     </changeSet>
-
 </databaseChangeLog>
