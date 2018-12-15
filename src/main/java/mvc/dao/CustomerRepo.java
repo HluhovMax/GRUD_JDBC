@@ -17,6 +17,7 @@ public class CustomerRepo implements GenericRepository<Customer, Integer>{
     private Connection connection = connectionUtil.getConnection();
     private PreparedStatement preparedStatement = null;
     private ResultSet resultSet = null;
+
     @Override
     public void save(Customer customer) {
         SQL = "INSERT INTO customer(customer) VALUES(?) ";
