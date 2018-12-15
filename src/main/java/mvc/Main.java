@@ -1,24 +1,17 @@
 package mvc;
 
 import mvc.dao.CompanyRepo;
+import mvc.dao.CustomerRepo;
 import mvc.model.Company;
+import mvc.model.Customer;
 
 import java.sql.SQLException;
+import java.util.List;
 
 public class Main {
     public static void main(String[] args) {
-        CompanyRepo companyRepo = new CompanyRepo();
+        CustomerRepo customerRepo = new CustomerRepo();
 
-//        try {
-//            companyRepo.save(new Company(2, "Apple"));
-//        } catch (SQLException e) {
-//            e.printStackTrace();
-//        }
-
-        try {
-            System.out.println(companyRepo.getById(1));
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+        customerRepo.delete(1);
     }
 }
