@@ -21,7 +21,7 @@ public class SkillService {
         skillRepo.update(skill);
     }
 
-    public List<Skill> getAllFromProjectRepo() {
+    public List<Skill> getAllFromSkillRepo() {
         List<Skill> skills = skillRepo.getAll();
         return skills;
     }
