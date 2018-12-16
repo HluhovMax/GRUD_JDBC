@@ -1,0 +1,36 @@
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+    <changeSet id="create tables" author="holosievo@gmail.com">
+        <createTable tableName="person">
+            <column name="id" type="int" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="name" type="varchar(30)"/>
+        </createTable>
+        <createTable tableName="address">
+            <column name="id" type="int" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="address" type="varchar(30)"/>
+        </createTable>
+        <createTable tableName="person_address">
+            <column name="person_id" type="int">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="address_id" type="int">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet id="add FK to person_address.person_id" author="holosievo@gmail.com">
+        <addForeignKeyConstraint baseTableName="person_address" baseColumnNames="person_id" constraintName="fk_pa_person_id" referencedTableName="person"
+                                 referencedColumnNames="id"/>
+    </changeSet>
+    <changeSet id="add FK to person_address.address_id" author="holosievo@gmail.com">
+        <addForeignKeyConstraint baseTableName="person_address" baseColumnNames="address_id" constraintName="fk_pa_address_id" referencedTableName="address"
+                                 referencedColumnNames="id"/>
+    </changeSet>
+</databaseChangeLog>

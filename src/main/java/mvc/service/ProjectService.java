@@ -1,32 +1,32 @@
 package mvc.service;
 
-import mvc.dao.ProjectRepo;
+import mvc.dao.ProjectRepoImpl;
 import mvc.model.Project;
 
 import java.util.List;
 
 public class ProjectService {
-    private ProjectRepo projectRepo = new ProjectRepo();
+    private ProjectRepoImpl projectRepoImpl = new ProjectRepoImpl();
 
     public void saveToProjectRepo(Project project) {
-        projectRepo.save(project);
+        projectRepoImpl.save(project);
     }
 
     public Project getByIdFromProjectRepo(Integer id) {
-        Project project = projectRepo.getById(id);
+        Project project = projectRepoImpl.getById(id);
         return project;
     }
 
     public void updateToProjectRepo(Project project) {
-        projectRepo.update(project);
+        projectRepoImpl.update(project);
     }
 
     public List<Project> getAllFromProjectRepo() {
-        List<Project> projects = projectRepo.getAll();
+        List<Project> projects = projectRepoImpl.getAll();
         return projects;
     }
 
     public void deleteFromProjectRepo(Integer id) {
-        projectRepo.delete(id);
+        projectRepoImpl.delete(id);
     }
 }

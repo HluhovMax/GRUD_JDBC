@@ -1,5 +1,6 @@
 package mvc.dao;
 
+import mvc.dao.repository.DeveloperRepository;
 import mvc.model.Developer;
 import mvc.util.ConnectionUtil;
 
@@ -11,16 +12,14 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class DeveloperRepo implements GenericRepository<Developer, Integer>{
-    private ConnectionUtil connectionUtil = new ConnectionUtil();
-    private String SQL = "";
-    private Connection connection = connectionUtil.getConnection();
+public class DeveloperRepoImpl implements DeveloperRepository {
+    private Connection connection = ConnectionUtil.getConnection();
     private PreparedStatement preparedStatement = null;
     private ResultSet resultSet = null;
 
     @Override
     public void save(Developer developer) {
-        SQL = "INSERT INTO developer(name, specialty, experience, salary) VALUES(?, ?, ?, ?) ";
+        String SQL = "INSERT INTO developer(name, specialty, experience, salary) VALUES(?, ?, ?, ?) ";
         try {
             preparedStatement = connection.prepareStatement(SQL);
             preparedStatement.setString(1, developer.getName());
@@ -38,13 +37,13 @@ public class DeveloperRepo implements GenericRepository<Developer, Integer>{
                     e.printStackTrace();
                 }
             }
-            connectionUtil.closeConnection(connection);
+            ConnectionUtil.closeConnection(connection);
         }
     }
 
     @Override
     public Developer getById(Integer id) {
-        SQL = "SELECT * FROM developer WHERE id = ?";
+        String SQL = "SELECT * FROM developer WHERE id = ?";
         try {
             preparedStatement = connection.prepareStatement(SQL);
             preparedStatement.setInt(1, id);
@@ -75,14 +74,14 @@ public class DeveloperRepo implements GenericRepository<Developer, Integer>{
                     e.printStackTrace();
                 }
             }
-            connectionUtil.closeConnection(connection);
+            ConnectionUtil.closeConnection(connection);
         }
         return null;
     }
 
     @Override
     public void update(Developer developer) {
-        SQL = "UPDATE developer SET name = ?, specialty = ?, experience = ?, salary = ? WHERE id = ?";
+        String SQL = "UPDATE developer SET name = ?, specialty = ?, experience = ?, salary = ? WHERE id = ?";
         try {
             preparedStatement = connection.prepareStatement(SQL);
             preparedStatement.setString(1, developer.getName());
@@ -102,13 +101,13 @@ public class DeveloperRepo implements GenericRepository<Developer, Integer>{
                     e.printStackTrace();
                 }
             }
-            connectionUtil.closeConnection(connection);
+            ConnectionUtil.closeConnection(connection);
         }
     }
 
     @Override
     public List<Developer> getAll() {
-        SQL = "SELECT * FROM developer";
+        String SQL = "SELECT * FROM developer";
         try {
             preparedStatement = connection.prepareStatement(SQL);
             resultSet = preparedStatement.executeQuery();
@@ -140,14 +139,14 @@ public class DeveloperRepo implements GenericRepository<Developer, Integer>{
                     e.printStackTrace();
                 }
             }
-            connectionUtil.closeConnection(connection);
+            ConnectionUtil.closeConnection(connection);
         }
         return null;
     }
 
     @Override
     public void delete(Integer id) {
-        SQL = "DELETE FROM developer WHERE id = ?";
+        String SQL = "DELETE FROM developer WHERE id = ?";
         try {
             preparedStatement = connection.prepareStatement(SQL);
             preparedStatement.setInt(1, id);
@@ -162,7 +161,7 @@ public class DeveloperRepo implements GenericRepository<Developer, Integer>{
                     e.printStackTrace();
                 }
             }
-            connectionUtil.closeConnection(connection);
+            ConnectionUtil.closeConnection(connection);
         }
     }
 }

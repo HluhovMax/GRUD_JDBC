@@ -3,12 +3,12 @@ package mvc.util;
 import java.sql.*;
 
 public class ConnectionUtil {
-    private String URL = "jdbc:mysql://localhost/jdbc_database";
-    private String USER = "root";
-    private String PASSWORD = "root";
-    private String JDBC_DRIVER = "com.mysql.cj.jdbc.Driver";
+    public static String URL = "jdbc:mysql://localhost/jdbc_database";
+    public static String USER = "root";
+    public static String PASSWORD = "root";
+    public static String JDBC_DRIVER = "com.mysql.cj.jdbc.Driver";
 
-    public Connection getConnection() {
+    public static Connection getConnection() {
         try {
             Class.forName(JDBC_DRIVER);
         } catch (ClassNotFoundException e) {
@@ -23,7 +23,7 @@ public class ConnectionUtil {
         return null;
     }
 
-    public void closeConnection(Connection connection) {
+    public static void closeConnection(Connection connection) {
         try {
             connection.close();
         } catch (SQLException e) {

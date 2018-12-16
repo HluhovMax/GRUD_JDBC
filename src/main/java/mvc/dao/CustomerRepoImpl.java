@@ -1,7 +1,7 @@
 package mvc.dao;
 
-
-import mvc.model.Skill;
+import mvc.dao.repository.CustomerRepository;
+import mvc.model.Customer;
 import mvc.util.ConnectionUtil;
 
 
@@ -12,19 +12,17 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SkillRepo implements GenericRepository<Skill, Integer>{
-    private ConnectionUtil connectionUtil = new ConnectionUtil();
-    private String SQL = "";
-    private Connection connection = connectionUtil.getConnection();
+public class CustomerRepoImpl implements CustomerRepository {
+    private Connection connection = ConnectionUtil.getConnection();
     private PreparedStatement preparedStatement = null;
     private ResultSet resultSet = null;
 
     @Override
-    public void save(Skill skill) {
-        SQL = "INSERT INTO skills(skill) VALUES(?) ";
+    public void save(Customer customer) {
+        String SQL = "INSERT INTO customer(customer) VALUES(?) ";
         try {
             preparedStatement = connection.prepareStatement(SQL);
-            preparedStatement.setString(1, skill.getSkill());
+            preparedStatement.setString(1, customer.getCustomer());
             preparedStatement.execute();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -36,22 +34,22 @@ public class SkillRepo implements GenericRepository<Skill, Integer>{
                     e.printStackTrace();
                 }
             }
-            connectionUtil.closeConnection(connection);
+            ConnectionUtil.closeConnection(connection);
         }
     }
 
     @Override
-    public Skill getById(Integer id) {
-        SQL = "SELECT * FROM skills WHERE id = ?";
+    public Customer getById(Integer id) {
+        String SQL = "SELECT * FROM customer WHERE id = ?";
         try {
             preparedStatement = connection.prepareStatement(SQL);
             preparedStatement.setInt(1, id);
             resultSet = preparedStatement.executeQuery();
-            Skill skill = new Skill();
+            Customer company = new Customer();
             while (resultSet.next()) {
-                skill.setId(resultSet.getInt("id"));
-                skill.setSkill(resultSet.getString("skill"));
-                return skill;
+                company.setId(resultSet.getInt("id"));
+                company.setCustomer(resultSet.getString("customer"));
+                return company;
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -70,18 +68,18 @@ public class SkillRepo implements GenericRepository<Skill, Integer>{
                     e.printStackTrace();
                 }
             }
-            connectionUtil.closeConnection(connection);
+            ConnectionUtil.closeConnection(connection);
         }
         return null;
     }
 
     @Override
-    public void update(Skill skill) {
-        SQL = "UPDATE skills SET skill = ? WHERE id = ?";
+    public void update(Customer customer) {
+        String SQL = "UPDATE customer SET customer = ? WHERE id = ?";
         try {
             preparedStatement = connection.prepareStatement(SQL);
-            preparedStatement.setString(1, skill.getSkill());
-            preparedStatement.setInt(2, skill.getId());
+            preparedStatement.setString(1, customer.getCustomer());
+            preparedStatement.setInt(2, customer.getId());
             preparedStatement.execute();
 
         } catch (SQLException e) {
@@ -94,24 +92,24 @@ public class SkillRepo implements GenericRepository<Skill, Integer>{
                     e.printStackTrace();
                 }
             }
-            connectionUtil.closeConnection(connection);
+            ConnectionUtil.closeConnection(connection);
         }
     }
 
     @Override
-    public List<Skill> getAll() {
-        SQL = "SELECT * FROM skills";
+    public List<Customer> getAll() {
+        String SQL = "SELECT * FROM customer";
         try {
             preparedStatement = connection.prepareStatement(SQL);
             resultSet = preparedStatement.executeQuery();
-            List<Skill> skills = new ArrayList<>();
+            List<Customer> customers = new ArrayList<>();
             while (resultSet.next()) {
-                Skill skill = new Skill();
-                skill.setId(resultSet.getInt("id"));
-                skill.setSkill(resultSet.getString("skill"));
-                skills.add(skill);
+                Customer customer = new Customer();
+                customer.setId(resultSet.getInt("id"));
+                customer.setCustomer(resultSet.getString("customer"));
+                customers.add(customer);
             }
-            return skills;
+            return customers;
         } catch (SQLException e) {
             e.printStackTrace();
         }finally {
@@ -129,14 +127,14 @@ public class SkillRepo implements GenericRepository<Skill, Integer>{
                     e.printStackTrace();
                 }
             }
-            connectionUtil.closeConnection(connection);
+            ConnectionUtil.closeConnection(connection);
         }
         return null;
     }
 
     @Override
     public void delete(Integer id) {
-        SQL = "DELETE FROM skills WHERE id = ?";
+        String SQL = "DELETE FROM customer WHERE id = ?";
         try {
             preparedStatement = connection.prepareStatement(SQL);
             preparedStatement.setInt(1, id);
@@ -151,7 +149,7 @@ public class SkillRepo implements GenericRepository<Skill, Integer>{
                     e.printStackTrace();
                 }
             }
-            connectionUtil.closeConnection(connection);
+            ConnectionUtil.closeConnection(connection);
         }
     }
 }

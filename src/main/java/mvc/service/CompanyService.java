@@ -1,32 +1,32 @@
 package mvc.service;
 
-import mvc.dao.CompanyRepo;
+import mvc.dao.CompanyRepoImpl;
 import mvc.model.Company;
 
 import java.util.List;
 
 public class CompanyService {
-    private CompanyRepo companyRepo = new CompanyRepo();
+    private CompanyRepoImpl companyRepoImpl = new CompanyRepoImpl();
 
     public void saveToCompanyRepo(Company company) {
-        companyRepo.save(company);
+        companyRepoImpl.save(company);
     }
 
     public Company getByIdFromCompanyRepo(Integer id) {
-        Company company = companyRepo.getById(id);
+        Company company = companyRepoImpl.getById(id);
         return company;
     }
 
     public void updateToCompanyRepo(Company company) {
-        companyRepo.update(company);
+        companyRepoImpl.update(company);
     }
 
     public List<Company> getAllFromCompanyRepo() {
-        List<Company> companies = companyRepo.getAll();
+        List<Company> companies = companyRepoImpl.getAll();
         return companies;
     }
 
     public void deleteFromCompanyRepo(Integer id) {
-        companyRepo.delete(id);
+        companyRepoImpl.delete(id);
     }
 }

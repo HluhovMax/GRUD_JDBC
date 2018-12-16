@@ -1,8 +1,8 @@
 package mvc.dao;
 
-import mvc.model.Customer;
+import mvc.dao.repository.CompanyRepository;
+import mvc.model.Company;
 import mvc.util.ConnectionUtil;
-
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -11,19 +11,17 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CustomerRepo implements GenericRepository<Customer, Integer>{
-    private ConnectionUtil connectionUtil = new ConnectionUtil();
-    private String SQL = "";
-    private Connection connection = connectionUtil.getConnection();
+public class CompanyRepoImpl implements CompanyRepository {
+    private Connection connection = ConnectionUtil.getConnection();
     private PreparedStatement preparedStatement = null;
     private ResultSet resultSet = null;
 
     @Override
-    public void save(Customer customer) {
-        SQL = "INSERT INTO customer(customer) VALUES(?) ";
+    public void save(Company company) {
+        String SQL = "INSERT INTO company(company) VALUES(?) ";
         try {
             preparedStatement = connection.prepareStatement(SQL);
-            preparedStatement.setString(1, customer.getCustomer());
+            preparedStatement.setString(1, company.getCompany());
             preparedStatement.execute();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -35,21 +33,22 @@ public class CustomerRepo implements GenericRepository<Customer, Integer>{
                     e.printStackTrace();
                 }
             }
-            connectionUtil.closeConnection(connection);
+            ConnectionUtil.closeConnection(connection);
         }
+
     }
 
     @Override
-    public Customer getById(Integer id) {
-        SQL = "SELECT * FROM customer WHERE id = ?";
+    public Company getById(Integer id) {
+        String SQL = "SELECT * FROM company WHERE id = ?";
         try {
             preparedStatement = connection.prepareStatement(SQL);
             preparedStatement.setInt(1, id);
             resultSet = preparedStatement.executeQuery();
-            Customer company = new Customer();
+            Company company = new Company();
             while (resultSet.next()) {
                 company.setId(resultSet.getInt("id"));
-                company.setCustomer(resultSet.getString("customer"));
+                company.setCompany(resultSet.getString("company"));
                 return company;
             }
         } catch (SQLException e) {
@@ -69,18 +68,18 @@ public class CustomerRepo implements GenericRepository<Customer, Integer>{
                     e.printStackTrace();
                 }
             }
-            connectionUtil.closeConnection(connection);
+            ConnectionUtil.closeConnection(connection);
         }
         return null;
     }
 
     @Override
-    public void update(Customer customer) {
-        SQL = "UPDATE customer SET customer = ? WHERE id = ?";
+    public void update(Company company) {
+        String SQL = "UPDATE company SET company = ? WHERE id = ?";
         try {
             preparedStatement = connection.prepareStatement(SQL);
-            preparedStatement.setString(1, customer.getCustomer());
-            preparedStatement.setInt(2, customer.getId());
+            preparedStatement.setString(1, company.getCompany());
+            preparedStatement.setInt(2, company.getId());
             preparedStatement.execute();
 
         } catch (SQLException e) {
@@ -93,24 +92,24 @@ public class CustomerRepo implements GenericRepository<Customer, Integer>{
                     e.printStackTrace();
                 }
             }
-            connectionUtil.closeConnection(connection);
+            ConnectionUtil.closeConnection(connection);
         }
     }
 
     @Override
-    public List<Customer> getAll() {
-        SQL = "SELECT * FROM customer";
+    public List<Company> getAll() {
+        String SQL = "SELECT * FROM company";
         try {
             preparedStatement = connection.prepareStatement(SQL);
             resultSet = preparedStatement.executeQuery();
-            List<Customer> customers = new ArrayList<>();
+            List<Company> companies = new ArrayList<>();
             while (resultSet.next()) {
-                Customer customer = new Customer();
-                customer.setId(resultSet.getInt("id"));
-                customer.setCustomer(resultSet.getString("customer"));
-                customers.add(customer);
+                Company company = new Company();
+                company.setId(resultSet.getInt("id"));
+                company.setCompany(resultSet.getString("company"));
+                companies.add(company);
             }
-            return customers;
+            return companies;
         } catch (SQLException e) {
             e.printStackTrace();
         }finally {
@@ -128,14 +127,14 @@ public class CustomerRepo implements GenericRepository<Customer, Integer>{
                     e.printStackTrace();
                 }
             }
-            connectionUtil.closeConnection(connection);
+            ConnectionUtil.closeConnection(connection);
         }
         return null;
     }
 
     @Override
     public void delete(Integer id) {
-        SQL = "DELETE FROM customer WHERE id = ?";
+        String SQL = "DELETE FROM company WHERE id = ?";
         try {
             preparedStatement = connection.prepareStatement(SQL);
             preparedStatement.setInt(1, id);
@@ -150,7 +149,7 @@ public class CustomerRepo implements GenericRepository<Customer, Integer>{
                     e.printStackTrace();
                 }
             }
-            connectionUtil.closeConnection(connection);
+            ConnectionUtil.closeConnection(connection);
         }
     }
 }

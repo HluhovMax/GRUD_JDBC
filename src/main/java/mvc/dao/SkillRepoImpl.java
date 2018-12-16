@@ -1,7 +1,10 @@
 package mvc.dao;
 
-import mvc.model.Company;
+
+import mvc.dao.repository.SkillRepository;
+import mvc.model.Skill;
 import mvc.util.ConnectionUtil;
+
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -10,19 +13,17 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CompanyRepo implements GenericRepository<Company, Integer>{
-    private ConnectionUtil connectionUtil = new ConnectionUtil();
-    private String SQL = "";
-    private Connection connection = connectionUtil.getConnection();
+public class SkillRepoImpl implements SkillRepository {
+    private Connection connection = ConnectionUtil.getConnection();
     private PreparedStatement preparedStatement = null;
     private ResultSet resultSet = null;
 
     @Override
-    public void save(Company company) {
-        SQL = "INSERT INTO company(company) VALUES(?) ";
+    public void save(Skill skill) {
+        String SQL = "INSERT INTO skills(skill) VALUES(?) ";
         try {
             preparedStatement = connection.prepareStatement(SQL);
-            preparedStatement.setString(1, company.getCompany());
+            preparedStatement.setString(1, skill.getSkill());
             preparedStatement.execute();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -34,23 +35,22 @@ public class CompanyRepo implements GenericRepository<Company, Integer>{
                     e.printStackTrace();
                 }
             }
-            connectionUtil.closeConnection(connection);
+            ConnectionUtil.closeConnection(connection);
         }
-
     }
 
     @Override
-    public Company getById(Integer id) {
-        SQL = "SELECT * FROM company WHERE id = ?";
+    public Skill getById(Integer id) {
+        String SQL = "SELECT * FROM skills WHERE id = ?";
         try {
             preparedStatement = connection.prepareStatement(SQL);
             preparedStatement.setInt(1, id);
             resultSet = preparedStatement.executeQuery();
-            Company company = new Company();
+            Skill skill = new Skill();
             while (resultSet.next()) {
-                company.setId(resultSet.getInt("id"));
-                company.setCompany(resultSet.getString("company"));
-                return company;
+                skill.setId(resultSet.getInt("id"));
+                skill.setSkill(resultSet.getString("skill"));
+                return skill;
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -69,18 +69,18 @@ public class CompanyRepo implements GenericRepository<Company, Integer>{
                     e.printStackTrace();
                 }
             }
-            connectionUtil.closeConnection(connection);
+            ConnectionUtil.closeConnection(connection);
         }
         return null;
     }
 
     @Override
-    public void update(Company company) {
-        SQL = "UPDATE company SET company = ? WHERE id = ?";
+    public void update(Skill skill) {
+        String SQL = "UPDATE skills SET skill = ? WHERE id = ?";
         try {
             preparedStatement = connection.prepareStatement(SQL);
-            preparedStatement.setString(1, company.getCompany());
-            preparedStatement.setInt(2, company.getId());
+            preparedStatement.setString(1, skill.getSkill());
+            preparedStatement.setInt(2, skill.getId());
             preparedStatement.execute();
 
         } catch (SQLException e) {
@@ -93,24 +93,24 @@ public class CompanyRepo implements GenericRepository<Company, Integer>{
                     e.printStackTrace();
                 }
             }
-            connectionUtil.closeConnection(connection);
+            ConnectionUtil.closeConnection(connection);
         }
     }
 
     @Override
-    public List<Company> getAll() {
-        SQL = "SELECT * FROM company";
+    public List<Skill> getAll() {
+        String SQL = "SELECT * FROM skills";
         try {
             preparedStatement = connection.prepareStatement(SQL);
             resultSet = preparedStatement.executeQuery();
-            List<Company> companies = new ArrayList<>();
+            List<Skill> skills = new ArrayList<>();
             while (resultSet.next()) {
-                Company company = new Company();
-                company.setId(resultSet.getInt("id"));
-                company.setCompany(resultSet.getString("company"));
-                companies.add(company);
+                Skill skill = new Skill();
+                skill.setId(resultSet.getInt("id"));
+                skill.setSkill(resultSet.getString("skill"));
+                skills.add(skill);
             }
-            return companies;
+            return skills;
         } catch (SQLException e) {
             e.printStackTrace();
         }finally {
@@ -128,14 +128,14 @@ public class CompanyRepo implements GenericRepository<Company, Integer>{
                     e.printStackTrace();
                 }
             }
-            connectionUtil.closeConnection(connection);
+            ConnectionUtil.closeConnection(connection);
         }
         return null;
     }
 
     @Override
     public void delete(Integer id) {
-        SQL = "DELETE FROM company WHERE id = ?";
+        String SQL = "DELETE FROM skills WHERE id = ?";
         try {
             preparedStatement = connection.prepareStatement(SQL);
             preparedStatement.setInt(1, id);
@@ -150,7 +150,7 @@ public class CompanyRepo implements GenericRepository<Company, Integer>{
                     e.printStackTrace();
                 }
             }
-            connectionUtil.closeConnection(connection);
+            ConnectionUtil.closeConnection(connection);
         }
     }
 }

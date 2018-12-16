@@ -1,4 +1,4 @@
-package mvc.dao;
+package mvc.dao.repository;
 
 
 import java.util.List;

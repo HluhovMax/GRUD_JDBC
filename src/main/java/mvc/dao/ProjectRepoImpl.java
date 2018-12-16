@@ -1,5 +1,6 @@
 package mvc.dao;
 
+import mvc.dao.repository.ProjectRepository;
 import mvc.model.Project;
 import mvc.util.ConnectionUtil;
 
@@ -11,16 +12,14 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ProjectRepo implements GenericRepository<Project, Integer>{
-    private ConnectionUtil connectionUtil = new ConnectionUtil();
-    private String SQL = "";
-    private Connection connection = connectionUtil.getConnection();
+public class ProjectRepoImpl implements ProjectRepository {
+    private Connection connection = ConnectionUtil.getConnection();
     private PreparedStatement preparedStatement = null;
     private ResultSet resultSet = null;
 
     @Override
     public void save(Project project) {
-        SQL = "INSERT INTO project(project, cost) VALUES(?, ?) ";
+        String SQL = "INSERT INTO project(project, cost) VALUES(?, ?) ";
         try {
             preparedStatement = connection.prepareStatement(SQL);
             preparedStatement.setString(1, project.getProject());
@@ -36,13 +35,13 @@ public class ProjectRepo implements GenericRepository<Project, Integer>{
                     e.printStackTrace();
                 }
             }
-            connectionUtil.closeConnection(connection);
+            ConnectionUtil.closeConnection(connection);
         }
     }
 
     @Override
     public Project getById(Integer id) {
-        SQL = "SELECT * FROM project WHERE id = ?";
+        String SQL = "SELECT * FROM project WHERE id = ?";
         try {
             preparedStatement = connection.prepareStatement(SQL);
             preparedStatement.setInt(1, id);
@@ -71,14 +70,14 @@ public class ProjectRepo implements GenericRepository<Project, Integer>{
                     e.printStackTrace();
                 }
             }
-            connectionUtil.closeConnection(connection);
+            ConnectionUtil.closeConnection(connection);
         }
         return null;
     }
 
     @Override
     public void update(Project project) {
-        SQL = "UPDATE project SET project = ?, cost = ? WHERE id = ?";
+        String SQL = "UPDATE project SET project = ?, cost = ? WHERE id = ?";
         try {
             preparedStatement = connection.prepareStatement(SQL);
             preparedStatement.setString(1, project.getProject());
@@ -96,13 +95,13 @@ public class ProjectRepo implements GenericRepository<Project, Integer>{
                     e.printStackTrace();
                 }
             }
-            connectionUtil.closeConnection(connection);
+            ConnectionUtil.closeConnection(connection);
         }
     }
 
     @Override
     public List<Project> getAll() {
-        SQL = "SELECT * FROM customer";
+        String SQL = "SELECT * FROM customer";
         try {
             preparedStatement = connection.prepareStatement(SQL);
             resultSet = preparedStatement.executeQuery();
@@ -132,14 +131,14 @@ public class ProjectRepo implements GenericRepository<Project, Integer>{
                     e.printStackTrace();
                 }
             }
-            connectionUtil.closeConnection(connection);
+            ConnectionUtil.closeConnection(connection);
         }
         return null;
     }
 
     @Override
     public void delete(Integer id) {
-        SQL = "DELETE FROM project WHERE id = ?";
+        String SQL = "DELETE FROM project WHERE id = ?";
         try {
             preparedStatement = connection.prepareStatement(SQL);
             preparedStatement.setInt(1, id);
@@ -154,7 +153,7 @@ public class ProjectRepo implements GenericRepository<Project, Integer>{
                     e.printStackTrace();
                 }
             }
-            connectionUtil.closeConnection(connection);
+            ConnectionUtil.closeConnection(connection);
         }
     }
 }

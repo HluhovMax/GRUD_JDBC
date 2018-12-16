@@ -1,32 +1,32 @@
 package mvc.service;
 
-import mvc.dao.SkillRepo;
+import mvc.dao.SkillRepoImpl;
 import mvc.model.Skill;
 
 import java.util.List;
 
 public class SkillService {
-    private SkillRepo skillRepo = new SkillRepo();
+    private SkillRepoImpl skillRepoImpl = new SkillRepoImpl();
 
     public void saveToSkillRepo(Skill skill) {
-        skillRepo.save(skill);
+        skillRepoImpl.save(skill);
     }
 
     public Skill getByIdFromSkillRepo(Integer id) {
-        Skill skill = skillRepo.getById(id);
+        Skill skill = skillRepoImpl.getById(id);
         return skill;
     }
 
     public void updateToSkillRepo(Skill skill) {
-        skillRepo.update(skill);
+        skillRepoImpl.update(skill);
     }
 
     public List<Skill> getAllFromSkillRepo() {
-        List<Skill> skills = skillRepo.getAll();
+        List<Skill> skills = skillRepoImpl.getAll();
         return skills;
     }
 
     public void deleteFromSkillRepo(Integer id) {
-        skillRepo.delete(id);
+        skillRepoImpl.delete(id);
     }
 }
