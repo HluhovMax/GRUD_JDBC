@@ -152,4 +152,9 @@ public class CompanyRepoImpl implements CompanyRepository {
             ConnectionUtil.closeConnection(connection);
         }
     }
+
+    public void insertIntoCommonTable() {
+
+    }
+
 }

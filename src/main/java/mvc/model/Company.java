@@ -1,16 +1,16 @@
 package mvc.model;
 
+import java.util.List;
+
 public class Company {
     private int id;
     private String company;
+    private List<Project> projects;
+    private List<Customer> customers;
 
     public Company() {
     }
 
-    public Company(int id, String company) {
-        this.id = id;
-        this.company = company;
-    }
 
     public int getId() {
         return id;
@@ -28,11 +28,29 @@ public class Company {
         this.company = company;
     }
 
+    public List<Project> getProjects() {
+        return projects;
+    }
+
+    public void setProjects(List<Project> projects) {
+        this.projects = projects;
+    }
+
+    public List<Customer> getCustomers() {
+        return customers;
+    }
+
+    public void setCustomers(List<Customer> customers) {
+        this.customers = customers;
+    }
+
     @Override
     public String toString() {
         return "Company{" +
                 "id=" + id +
                 ", company='" + company + '\'' +
+                ", projects=" + projects +
+                ", customers=" + customers +
                 '}';
     }
 }

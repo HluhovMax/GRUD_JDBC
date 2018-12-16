@@ -25,6 +25,7 @@ public class ProjectRepoImpl implements ProjectRepository {
             preparedStatement.setString(1, project.getProject());
             preparedStatement.setInt(2, project.getCost());
             preparedStatement.execute();
+
         } catch (SQLException e) {
             e.printStackTrace();
         }finally {
@@ -143,6 +144,36 @@ public class ProjectRepoImpl implements ProjectRepository {
             preparedStatement = connection.prepareStatement(SQL);
             preparedStatement.setInt(1, id);
             preparedStatement.execute();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }finally {
+            if (preparedStatement != null) {
+                try {
+                    preparedStatement.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
+            ConnectionUtil.closeConnection(connection);
+        }
+    }
+
+    public void insert(Project project) {
+        String COMPANY_PROJECT_SQL = "INSERT INTO company_project(project_id) VALUES(?)";
+        String CUSTOMER_PROJECT_SQL = "INSERT INTO  customer_project(project_id) VALUES (?)";
+        String PROJECT_DEVELOPER_SQL = "INSERT INTO project_developer(project_id) VALUES (?)";
+        try {
+            connection.setAutoCommit(false);
+            preparedStatement = connection.prepareStatement(COMPANY_PROJECT_SQL);
+            preparedStatement.setInt(1, project.getId());
+            preparedStatement.execute();
+            preparedStatement = connection.prepareStatement(CUSTOMER_PROJECT_SQL);
+            preparedStatement.setInt(1, project.getId());
+            preparedStatement.execute();
+            preparedStatement = connection.prepareStatement(PROJECT_DEVELOPER_SQL);
+            preparedStatement.setInt(1, project.getId());
+            preparedStatement.execute();
+            connection.commit();
         } catch (SQLException e) {
             e.printStackTrace();
         }finally {

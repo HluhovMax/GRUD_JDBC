@@ -7,10 +7,6 @@ public class Skill {
     public Skill() {
     }
 
-    public Skill(int id, String skill) {
-        this.id = id;
-        this.skill = skill;
-    }
 
     public int getId() {
         return id;

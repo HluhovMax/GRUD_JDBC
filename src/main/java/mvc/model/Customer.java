@@ -1,16 +1,15 @@
 package mvc.model;
 
+import java.util.List;
+
 public class Customer {
     private int id;
     private String customer;
+    private List<Project> projects;
 
     public Customer() {
     }
 
-    public Customer(int id, String customer) {
-        this.id = id;
-        this.customer = customer;
-    }
 
     public int getId() {
         return id;
@@ -28,11 +27,20 @@ public class Customer {
         this.customer = customer;
     }
 
+    public List<Project> getProjects() {
+        return projects;
+    }
+
+    public void setProjects(List<Project> projects) {
+        this.projects = projects;
+    }
+
     @Override
     public String toString() {
         return "Customer{" +
                 "id=" + id +
                 ", customer='" + customer + '\'' +
+                ", projects=" + projects +
                 '}';
     }
 }

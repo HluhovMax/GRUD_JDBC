@@ -1,21 +1,16 @@
 package mvc.model;
 
+import java.util.List;
+
 public class Developer {
     private int id;
     private String name;
     private String specialty;
     private int experience;
     private int salary;
+    private List<Skill> skills;
 
     public Developer() {
-    }
-
-    public Developer(int id, String name, String specialty, int experience, int salary) {
-        this.id = id;
-        this.name = name;
-        this.specialty = specialty;
-        this.experience = experience;
-        this.salary = salary;
     }
 
     public int getId() {
@@ -58,6 +53,14 @@ public class Developer {
         this.salary = salary;
     }
 
+    public List<Skill> getSkills() {
+        return skills;
+    }
+
+    public void setSkills(List<Skill> skills) {
+        this.skills = skills;
+    }
+
     @Override
     public String toString() {
         return "Developer{" +
@@ -66,6 +69,7 @@ public class Developer {
                 ", specialty='" + specialty + '\'' +
                 ", experience=" + experience +
                 ", salary=" + salary +
+                ", skills=" + skills +
                 '}';
     }
 }
