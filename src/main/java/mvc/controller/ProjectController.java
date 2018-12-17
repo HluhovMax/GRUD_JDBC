@@ -30,7 +30,4 @@ public class ProjectController {
         projectService.deleteFromProjectRepo(id);
     }
 
-    public void insert(Project project) {
-        projectService.insertIntoProjectRepo(project);
-    }
 }

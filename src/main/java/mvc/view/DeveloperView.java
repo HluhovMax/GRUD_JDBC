@@ -5,6 +5,7 @@ import mvc.model.Developer;
 import mvc.model.Skill;
 
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
@@ -22,11 +23,23 @@ public class DeveloperView {
     }
 
     public void save() {
-        System.out.println("enter name, specialty, experience, salary");
+        System.out.println("enter id, name, specialty, experience, salary");
+        developer.setId(intScanner.nextInt());
         developer.setName(stringScanner.nextLine());
         developer.setSpecialty(stringScanner.nextLine());
         developer.setExperience(intScanner.nextInt());
         developer.setSalary(intScanner.nextInt());
+        System.out.println("how many skills do you want to add:");
+        int x = intScanner.nextInt();
+        List<Skill> skillList = new ArrayList<>();
+        for (int i = 0; i < x; i++) {
+            System.out.println("enter id, skill:");
+            Skill skill = new Skill();
+            skill.setId(intScanner.nextInt());
+            skill.setSkill(stringScanner.nextLine());
+            skillList.add(skill);
+        }
+        developer.setSkills(skillList);
         if (developer != null) {
             developerController.save(developer);
         }
@@ -71,12 +84,4 @@ public class DeveloperView {
         developerController.delete(intScanner.nextInt());
     }
 
-    public void insert() {
-        System.out.println("enter developer_id, skill_id");
-        developer.setId(intScanner.nextInt());
-        Skill skill = new Skill();
-        skill.setId(intScanner.nextInt());
-        developer.setSkill(skill);
-        developerController.insert(developer);
-    }
 }

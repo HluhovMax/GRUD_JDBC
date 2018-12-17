@@ -57,15 +57,4 @@ public class CustomerView {
         System.out.println("enter id:");
         customerController.delete(intScanner.nextInt());
     }
-
-    public void insert() {
-        System.out.println("enter customer_id, project_id");
-        customer.setId(intScanner.nextInt());
-        Project project = new Project();
-        project.setId(intScanner.nextInt());
-        customer.setProject(project);
-        if (customer != null) {
-            customerController.insert(customer);
-        }
-    }
 }

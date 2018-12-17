@@ -1,4 +1,4 @@
-package mvc.dao.repository;
+package mvc.repository.jdbc;
 
 import mvc.model.Skill;
 

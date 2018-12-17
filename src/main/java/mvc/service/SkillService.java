@@ -1,6 +1,6 @@
 package mvc.service;
 
-import mvc.dao.SkillRepoImpl;
+import mvc.repository.SkillRepoImpl;
 import mvc.model.Skill;
 
 import java.util.List;

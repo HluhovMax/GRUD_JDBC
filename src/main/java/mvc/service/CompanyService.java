@@ -1,6 +1,6 @@
 package mvc.service;
 
-import mvc.dao.CompanyRepoImpl;
+import mvc.repository.CompanyRepoImpl;
 import mvc.model.Company;
 
 import java.util.List;
@@ -29,11 +29,5 @@ public class CompanyService {
     public void deleteFromCompanyRepo(Integer id) {
         companyRepoImpl.delete(id);
     }
-
-    public void insertIntoCompanyRepo(Company company) {
-        companyRepoImpl.insertCustomerToCompany(company);
-        companyRepoImpl.insertProjectToCompany(company);
-    }
-
 
 }

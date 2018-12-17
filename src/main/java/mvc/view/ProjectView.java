@@ -63,15 +63,4 @@ public class ProjectView {
         System.out.println("enter id:");
         projectController.delete(intScanner.nextInt());
     }
-
-    public void insert() {
-        System.out.println("enter project_id, developer_id");
-        project.setId(intScanner.nextInt());
-        Developer developer = new Developer();
-        developer.setId(intScanner.nextInt());
-        project.setDeveloper(developer);
-        if (project != null) {
-            projectController.insert(project);
-        }
-    }
 }

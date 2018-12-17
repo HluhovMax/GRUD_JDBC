@@ -1,8 +1,7 @@
-package mvc.dao;
+package mvc.repository;
 
-import mvc.dao.repository.DeveloperRepository;
-import mvc.model.Developer;
-import mvc.model.Skill;
+import mvc.repository.jdbc.ProjectRepository;
+import mvc.model.Project;
 import mvc.util.ConnectionUtil;
 
 
@@ -13,20 +12,19 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class DeveloperRepoImpl implements DeveloperRepository {
-    private Connection connection = ConnectionUtil.getConnection();
+public class ProjectRepoImpl implements ProjectRepository {
+    private Connection connection = null;
     private PreparedStatement preparedStatement = null;
     private ResultSet resultSet = null;
 
     @Override
-    public void save(Developer developer) {
-        String SQL = "INSERT INTO developer(name, specialty, experience, salary) VALUES(?, ?, ?, ?) ";
+    public void save(Project project) {
+        String SQL = "INSERT INTO project(project, cost) VALUES(?, ?) ";
         try {
+            connection = ConnectionUtil.getConnection();
             preparedStatement = connection.prepareStatement(SQL);
-            preparedStatement.setString(1, developer.getName());
-            preparedStatement.setString(2, developer.getSpecialty());
-            preparedStatement.setInt(3, developer.getExperience());
-            preparedStatement.setInt(4, developer.getSalary());
+            preparedStatement.setString(1, project.getProject());
+            preparedStatement.setInt(2, project.getCost());
             preparedStatement.execute();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -43,24 +41,19 @@ public class DeveloperRepoImpl implements DeveloperRepository {
     }
 
     @Override
-    public Developer getById(Integer id) {
-        String SQL = "SELECT * FROM developer, skills" +
-                " LEFT JOIN developer_skill ds on developer.id = ?";
+    public Project getById(Integer id) {
+        String SQL = "SELECT * FROM project LEFT JOIN company_project cp on project.id = ?";
         try {
+            connection = ConnectionUtil.getConnection();
             preparedStatement = connection.prepareStatement(SQL);
             preparedStatement.setInt(1, id);
             resultSet = preparedStatement.executeQuery();
-            Developer developer = new Developer();
-            Skill skill = new Skill();
+            Project project = new Project();
             while (resultSet.next()) {
-                developer.setId(resultSet.getInt("id"));
-                developer.setName(resultSet.getString("name"));
-                developer.setSpecialty(resultSet.getString("specialty"));
-                developer.setExperience(resultSet.getInt("experience"));
-                developer.setSalary(resultSet.getInt("salary"));
-                skill.setSkill(resultSet.getString("skill"));
-                developer.setSkill(skill);
-                return developer;
+                project.setId(resultSet.getInt("id"));
+                project.setProject(resultSet.getString("project"));
+                project.setCost(resultSet.getInt("cost"));
+                return project;
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -85,15 +78,14 @@ public class DeveloperRepoImpl implements DeveloperRepository {
     }
 
     @Override
-    public void update(Developer developer) {
-        String SQL = "UPDATE developer SET name = ?, specialty = ?, experience = ?, salary = ? WHERE id = ?";
+    public void update(Project project) {
+        String SQL = "UPDATE project SET project = ?, cost = ? WHERE id = ?";
         try {
+            connection = ConnectionUtil.getConnection();
             preparedStatement = connection.prepareStatement(SQL);
-            preparedStatement.setString(1, developer.getName());
-            preparedStatement.setString(2, developer.getSpecialty());
-            preparedStatement.setInt(3, developer.getExperience());
-            preparedStatement.setInt(4, developer.getSalary());
-            preparedStatement.setInt(5, developer.getId());
+            preparedStatement.setString(1, project.getProject());
+            preparedStatement.setInt(2, project.getCost());
+            preparedStatement.setInt(3, project.getId());
             preparedStatement.execute();
 
         } catch (SQLException e) {
@@ -111,22 +103,21 @@ public class DeveloperRepoImpl implements DeveloperRepository {
     }
 
     @Override
-    public List<Developer> getAll() {
-        String SQL = "SELECT * FROM developer";
+    public List<Project> getAll() {
+        String SQL = "SELECT * FROM customer";
         try {
+            connection = ConnectionUtil.getConnection();
             preparedStatement = connection.prepareStatement(SQL);
             resultSet = preparedStatement.executeQuery();
-            List<Developer> developers = new ArrayList<>();
+            List<Project> projects= new ArrayList<>();
             while (resultSet.next()) {
-                Developer developer = new Developer();
-                developer.setId(resultSet.getInt("id"));
-                developer.setName(resultSet.getString("name"));
-                developer.setSpecialty(resultSet.getString("specialty"));
-                developer.setExperience(resultSet.getInt("experience"));
-                developer.setSalary(resultSet.getInt("salary"));
-                developers.add(developer);
+                Project project = new Project();
+                project.setId(resultSet.getInt("id"));
+                project.setProject(resultSet.getString("project"));
+                project.setCost(resultSet.getInt("cost"));
+                projects.add(project);
             }
-            return developers;
+            return projects;
         } catch (SQLException e) {
             e.printStackTrace();
         }finally {
@@ -151,8 +142,9 @@ public class DeveloperRepoImpl implements DeveloperRepository {
 
     @Override
     public void delete(Integer id) {
-        String SQL = "DELETE FROM developer WHERE id = ?";
+        String SQL = "DELETE FROM project WHERE id = ?";
         try {
+            connection = ConnectionUtil.getConnection();
             preparedStatement = connection.prepareStatement(SQL);
             preparedStatement.setInt(1, id);
             preparedStatement.execute();
@@ -170,13 +162,13 @@ public class DeveloperRepoImpl implements DeveloperRepository {
         }
     }
 
-    public void insertSkillsForDeveloper(Developer developer) {
-        String DEVELOPER_SKILLS = "INSERT INTO developer_skill(developer_id, skill_id)" +
-                "VALUES (?, ?) ";
+    public void insert(Project project) {
+        String PROJECT_DEVELOPER_SQL = "INSERT INTO project_developer(project_id, developer_id) VALUES (?,?)";
         try {
-            preparedStatement = connection.prepareStatement(DEVELOPER_SKILLS);
-            preparedStatement.setInt(1, developer.getId());
-            preparedStatement.setInt(2, developer.getSkill().getId());
+            connection = ConnectionUtil.getConnection();
+            preparedStatement = connection.prepareStatement(PROJECT_DEVELOPER_SQL);
+            preparedStatement.setInt(1, project.getId());
+            preparedStatement.setInt(2, project.getDeveloper().getId());
             preparedStatement.execute();
         } catch (SQLException e) {
             e.printStackTrace();

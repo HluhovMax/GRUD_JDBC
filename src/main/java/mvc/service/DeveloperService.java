@@ -1,6 +1,6 @@
 package mvc.service;
 
-import mvc.dao.DeveloperRepoImpl;
+import mvc.repository.DeveloperRepoImpl;
 import mvc.model.Developer;
 
 import java.util.List;
@@ -30,7 +30,5 @@ public class DeveloperService {
         developerRepoImpl.delete(id);
     }
 
-    public void insertIntoDeveloperRepo(Developer developer) {
-        developerRepoImpl.insertSkillsForDeveloper(developer);
-    }
+
 }

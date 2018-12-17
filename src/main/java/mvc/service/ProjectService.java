@@ -1,6 +1,6 @@
 package mvc.service;
 
-import mvc.dao.ProjectRepoImpl;
+import mvc.repository.ProjectRepoImpl;
 import mvc.model.Project;
 
 import java.util.List;
@@ -30,7 +30,4 @@ public class ProjectService {
         projectRepoImpl.delete(id);
     }
 
-    public void insertIntoProjectRepo(Project project) {
-        projectRepoImpl.insert(project);
-    }
 }

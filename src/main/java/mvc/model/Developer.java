@@ -8,7 +8,7 @@ public class Developer {
     private String specialty;
     private int experience;
     private int salary;
-    private Skill skill;
+    private List<Skill> skills;
 
     public Developer() {
     }
@@ -53,12 +53,12 @@ public class Developer {
         this.salary = salary;
     }
 
-    public Skill getSkill() {
-        return skill;
+    public List<Skill> getSkills() {
+        return skills;
     }
 
-    public void setSkill(Skill skill) {
-        this.skill = skill;
+    public void setSkills(List<Skill> skills) {
+        this.skills = skills;
     }
 
     @Override
@@ -69,7 +69,7 @@ public class Developer {
                 ", specialty='" + specialty + '\'' +
                 ", experience=" + experience +
                 ", salary=" + salary +
-                ", skill=" + skill +
+                ", skills=" + skills +
                 '}';
     }
 }

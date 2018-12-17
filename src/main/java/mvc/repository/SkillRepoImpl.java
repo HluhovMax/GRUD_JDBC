@@ -1,7 +1,8 @@
-package mvc.dao;
+package mvc.repository;
 
-import mvc.dao.repository.CustomerRepository;
-import mvc.model.Customer;
+
+import mvc.repository.jdbc.SkillRepository;
+import mvc.model.Skill;
 import mvc.util.ConnectionUtil;
 
 
@@ -12,17 +13,18 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CustomerRepoImpl implements CustomerRepository {
-    private Connection connection = ConnectionUtil.getConnection();
+public class SkillRepoImpl implements SkillRepository {
+    private Connection connection = null;
     private PreparedStatement preparedStatement = null;
     private ResultSet resultSet = null;
 
     @Override
-    public void save(Customer customer) {
-        String SQL = "INSERT INTO customer(customer) VALUES(?) ";
+    public void save(Skill skill) {
+        String SQL = "INSERT INTO skills(skill) VALUES(?) ";
         try {
+            connection = ConnectionUtil.getConnection();
             preparedStatement = connection.prepareStatement(SQL);
-            preparedStatement.setString(1, customer.getCustomer());
+            preparedStatement.setString(1, skill.getSkill());
             preparedStatement.execute();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -39,17 +41,18 @@ public class CustomerRepoImpl implements CustomerRepository {
     }
 
     @Override
-    public Customer getById(Integer id) {
-        String SQL = "SELECT * FROM customer LEFT JOIN company_customer cc on customer.id = ?";
+    public Skill getById(Integer id) {
+        String SQL = "SELECT * FROM skills WHERE id = ?";
         try {
+            connection = ConnectionUtil.getConnection();
             preparedStatement = connection.prepareStatement(SQL);
             preparedStatement.setInt(1, id);
             resultSet = preparedStatement.executeQuery();
-            Customer company = new Customer();
+            Skill skill = new Skill();
             while (resultSet.next()) {
-                company.setId(resultSet.getInt("id"));
-                company.setCustomer(resultSet.getString("customer"));
-                return company;
+                skill.setId(resultSet.getInt("id"));
+                skill.setSkill(resultSet.getString("skill"));
+                return skill;
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -74,12 +77,13 @@ public class CustomerRepoImpl implements CustomerRepository {
     }
 
     @Override
-    public void update(Customer customer) {
-        String SQL = "UPDATE customer SET customer = ? WHERE id = ?";
+    public void update(Skill skill) {
+        String SQL = "UPDATE skills SET skill = ? WHERE id = ?";
         try {
+            connection = ConnectionUtil.getConnection();
             preparedStatement = connection.prepareStatement(SQL);
-            preparedStatement.setString(1, customer.getCustomer());
-            preparedStatement.setInt(2, customer.getId());
+            preparedStatement.setString(1, skill.getSkill());
+            preparedStatement.setInt(2, skill.getId());
             preparedStatement.execute();
 
         } catch (SQLException e) {
@@ -97,19 +101,20 @@ public class CustomerRepoImpl implements CustomerRepository {
     }
 
     @Override
-    public List<Customer> getAll() {
-        String SQL = "SELECT * FROM customer";
+    public List<Skill> getAll() {
+        String SQL = "SELECT * FROM skills";
         try {
+            connection = ConnectionUtil.getConnection();
             preparedStatement = connection.prepareStatement(SQL);
             resultSet = preparedStatement.executeQuery();
-            List<Customer> customers = new ArrayList<>();
+            List<Skill> skills = new ArrayList<>();
             while (resultSet.next()) {
-                Customer customer = new Customer();
-                customer.setId(resultSet.getInt("id"));
-                customer.setCustomer(resultSet.getString("customer"));
-                customers.add(customer);
+                Skill skill = new Skill();
+                skill.setId(resultSet.getInt("id"));
+                skill.setSkill(resultSet.getString("skill"));
+                skills.add(skill);
             }
-            return customers;
+            return skills;
         } catch (SQLException e) {
             e.printStackTrace();
         }finally {
@@ -134,32 +139,11 @@ public class CustomerRepoImpl implements CustomerRepository {
 
     @Override
     public void delete(Integer id) {
-        String SQL = "DELETE FROM customer WHERE id = ?";
+        String SQL = "DELETE FROM skills WHERE id = ?";
         try {
+            connection = ConnectionUtil.getConnection();
             preparedStatement = connection.prepareStatement(SQL);
             preparedStatement.setInt(1, id);
-            preparedStatement.execute();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }finally {
-            if (preparedStatement != null) {
-                try {
-                    preparedStatement.close();
-                } catch (SQLException e) {
-                    e.printStackTrace();
-                }
-            }
-            ConnectionUtil.closeConnection(connection);
-        }
-    }
-
-    public void insertProjectToCustomer(Customer customer) {
-        String CUSTOMER_PROJECT = "INSERT INTO customer_project (customer_id, project_id)" +
-                "VALUES (?, ?)";
-        try {
-            preparedStatement = connection.prepareStatement(CUSTOMER_PROJECT);
-            preparedStatement.setInt(1, customer.getId());
-            preparedStatement.setInt(2, customer.getProject().getId());
             preparedStatement.execute();
         } catch (SQLException e) {
             e.printStackTrace();

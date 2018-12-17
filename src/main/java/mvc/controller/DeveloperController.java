@@ -30,7 +30,4 @@ public class DeveloperController {
         developerService.deleteFromDeveloperRepo(id);
     }
 
-    public void insert(Developer developer) {
-        developerService.insertIntoDeveloperRepo(developer);
-    }
 }

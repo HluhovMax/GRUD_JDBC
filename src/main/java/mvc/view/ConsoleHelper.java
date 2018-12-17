@@ -28,8 +28,6 @@ public class ConsoleHelper {
                     case "delete":
                         companyView.delete();
                         break;
-                    case "insert":
-                        companyView.insert();
                 }
                 break;
             case "customer":
@@ -52,8 +50,6 @@ public class ConsoleHelper {
                     case "delete":
                         customerView.delete();
                         break;
-                    case "insert":
-                        customerView.insert();
                 }
                 break;
             case "developer":
@@ -76,8 +72,6 @@ public class ConsoleHelper {
                     case "delete":
                         developerView.delete();
                         break;
-                    case "insert":
-                        developerView.insert();
                 }
                 break;
             case "project":
@@ -100,8 +94,6 @@ public class ConsoleHelper {
                     case "delete":
                         projectView.delete();
                         break;
-                    case "insert":
-                        projectView.insert();
                 }
                 break;
             case "skill":

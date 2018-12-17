@@ -1,6 +1,6 @@
 package mvc.service;
 
-import mvc.dao.CustomerRepoImpl;
+import mvc.repository.CustomerRepoImpl;
 import mvc.model.Customer;
 
 import java.util.List;
@@ -30,7 +30,4 @@ public class CustomerService {
         customerRepoImpl.delete(id);
     }
 
-    public void insertIntoCustomerRepo(Customer customer) {
-        customerRepoImpl.insertProjectToCustomer(customer);
-    }
 }

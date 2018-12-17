@@ -5,7 +5,7 @@ import java.util.List;
 public class Customer {
     private int id;
     private String customer;
-    private Project project;
+    private List<Project> projects;
 
     public Customer() {
     }
@@ -27,12 +27,12 @@ public class Customer {
         this.customer = customer;
     }
 
-    public Project getProject() {
-        return project;
+    public List<Project> getProjects() {
+        return projects;
     }
 
-    public void setProject(Project project) {
-        this.project = project;
+    public void setProjects(List<Project> projects) {
+        this.projects = projects;
     }
 
     @Override
@@ -40,7 +40,7 @@ public class Customer {
         return "Customer{" +
                 "id=" + id +
                 ", customer='" + customer + '\'' +
-                ", project=" + project +
+                ", projects=" + projects +
                 '}';
     }
 }

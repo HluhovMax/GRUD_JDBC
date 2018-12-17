@@ -30,7 +30,4 @@ public class CustomerController {
         customerService.deleteFromCustomerRepo(id);
     }
 
-    public void insert(Customer customer) {
-        customerService.insertIntoCustomerRepo(customer);
-    }
 }

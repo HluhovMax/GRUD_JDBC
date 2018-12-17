@@ -1,9 +1,10 @@
-package mvc.dao;
+package mvc.repository;
 
-import mvc.dao.repository.ProjectRepository;
+import mvc.model.Customer;
 import mvc.model.Project;
+import mvc.repository.jdbc.CompanyRepository;
+import mvc.model.Company;
 import mvc.util.ConnectionUtil;
-
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -12,19 +13,35 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ProjectRepoImpl implements ProjectRepository {
-    private Connection connection = ConnectionUtil.getConnection();
+public class CompanyRepoImpl implements CompanyRepository {
+    private Connection connection = null;
     private PreparedStatement preparedStatement = null;
     private ResultSet resultSet = null;
 
     @Override
-    public void save(Project project) {
-        String SQL = "INSERT INTO project(project, cost) VALUES(?, ?) ";
+    public void save(Company company) {
+        String SQL = "INSERT INTO company(company) VALUES(?) ";
+        insertCustomerToCompany(company);
+        insertProjectToCompany(company);
+        ProjectRepoImpl projectRepo = new ProjectRepoImpl();
+        CustomerRepoImpl customerRepo = new CustomerRepoImpl();
+        List<Project> projects = company.getProjects();
+        for (Project project : projects
+        ) {
+            projectRepo.save(project);
+        }
+        List<Customer> customers = company.getCustomers();
+        for (Customer customer : customers
+        ) {
+            customerRepo.save(customer);
+        }
         try {
+            connection = ConnectionUtil.getConnection();
             preparedStatement = connection.prepareStatement(SQL);
-            preparedStatement.setString(1, project.getProject());
-            preparedStatement.setInt(2, project.getCost());
+            preparedStatement.setString(1, company.getCompany());
             preparedStatement.execute();
+            insertProjectToCompany(company);
+            insertCustomerToCompany(company);
         } catch (SQLException e) {
             e.printStackTrace();
         }finally {
@@ -37,21 +54,22 @@ public class ProjectRepoImpl implements ProjectRepository {
             }
             ConnectionUtil.closeConnection(connection);
         }
+
     }
 
     @Override
-    public Project getById(Integer id) {
-        String SQL = "SELECT * FROM project LEFT JOIN company_project cp on project.id = ?";
+    public Company getById(Integer id) {
+        String SQL = "SELECT * FROM company LEFT JOIN company_customer cc on company.id = ?";
         try {
+            connection = ConnectionUtil.getConnection();
             preparedStatement = connection.prepareStatement(SQL);
             preparedStatement.setInt(1, id);
             resultSet = preparedStatement.executeQuery();
-            Project project = new Project();
+            Company company = new Company();
             while (resultSet.next()) {
-                project.setId(resultSet.getInt("id"));
-                project.setProject(resultSet.getString("project"));
-                project.setCost(resultSet.getInt("cost"));
-                return project;
+                company.setId(resultSet.getInt("id"));
+                company.setCompany(resultSet.getString("company"));
+                return company;
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -76,13 +94,13 @@ public class ProjectRepoImpl implements ProjectRepository {
     }
 
     @Override
-    public void update(Project project) {
-        String SQL = "UPDATE project SET project = ?, cost = ? WHERE id = ?";
+    public void update(Company company) {
+        String SQL = "UPDATE company SET company = ? WHERE id = ?";
         try {
+            connection = ConnectionUtil.getConnection();
             preparedStatement = connection.prepareStatement(SQL);
-            preparedStatement.setString(1, project.getProject());
-            preparedStatement.setInt(2, project.getCost());
-            preparedStatement.setInt(3, project.getId());
+            preparedStatement.setString(1, company.getCompany());
+            preparedStatement.setInt(2, company.getId());
             preparedStatement.execute();
 
         } catch (SQLException e) {
@@ -100,20 +118,20 @@ public class ProjectRepoImpl implements ProjectRepository {
     }
 
     @Override
-    public List<Project> getAll() {
-        String SQL = "SELECT * FROM customer";
+    public List<Company> getAll() {
+        String SQL = "SELECT * FROM company";
         try {
+            connection = ConnectionUtil.getConnection();
             preparedStatement = connection.prepareStatement(SQL);
             resultSet = preparedStatement.executeQuery();
-            List<Project> projects= new ArrayList<>();
+            List<Company> companies = new ArrayList<>();
             while (resultSet.next()) {
-                Project project = new Project();
-                project.setId(resultSet.getInt("id"));
-                project.setProject(resultSet.getString("project"));
-                project.setCost(resultSet.getInt("cost"));
-                projects.add(project);
+                Company company = new Company();
+                company.setId(resultSet.getInt("id"));
+                company.setCompany(resultSet.getString("company"));
+                companies.add(company);
             }
-            return projects;
+            return companies;
         } catch (SQLException e) {
             e.printStackTrace();
         }finally {
@@ -138,8 +156,9 @@ public class ProjectRepoImpl implements ProjectRepository {
 
     @Override
     public void delete(Integer id) {
-        String SQL = "DELETE FROM project WHERE id = ?";
+        String SQL = "DELETE FROM company WHERE id = ?";
         try {
+            connection = ConnectionUtil.getConnection();
             preparedStatement = connection.prepareStatement(SQL);
             preparedStatement.setInt(1, id);
             preparedStatement.execute();
@@ -157,13 +176,19 @@ public class ProjectRepoImpl implements ProjectRepository {
         }
     }
 
-    public void insert(Project project) {
-        String PROJECT_DEVELOPER_SQL = "INSERT INTO project_developer(project_id, developer_id) VALUES (?,?)";
+    private void insertCustomerToCompany(Company company) {
+        String COMPANY_CUSTOMER = "INSERT INTO company_customer(company_id, customer_id)" +
+                "VALUES (?, ?)";
         try {
-            preparedStatement = connection.prepareStatement(PROJECT_DEVELOPER_SQL);
-            preparedStatement.setInt(1, project.getId());
-            preparedStatement.setInt(2, project.getDeveloper().getId());
-            preparedStatement.execute();
+            List<Customer> customers = company.getCustomers();
+            for (Customer customer : customers
+            ) {
+                connection = ConnectionUtil.getConnection();
+                preparedStatement = connection.prepareStatement(COMPANY_CUSTOMER);
+                preparedStatement.setInt(1, company.getId());
+                preparedStatement.setInt(2, customer.getId());
+                preparedStatement.execute();
+            }
         } catch (SQLException e) {
             e.printStackTrace();
         }finally {
@@ -177,4 +202,32 @@ public class ProjectRepoImpl implements ProjectRepository {
             ConnectionUtil.closeConnection(connection);
         }
     }
+
+    private void insertProjectToCompany(Company company) {
+        String COMPANY_PROJECT = "INSERT INTO company_project (company_id, project_id)" +
+                "VALUES (?, ?)";
+        try {
+            List<Project> projects = company.getProjects();
+            for (Project project : projects
+            ) {
+                connection = ConnectionUtil.getConnection();
+                preparedStatement = connection.prepareStatement(COMPANY_PROJECT);
+                preparedStatement.setInt(1, company.getId());
+                preparedStatement.setInt(2, project.getId());
+                preparedStatement.execute();
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }finally {
+            if (preparedStatement != null) {
+                try {
+                    preparedStatement.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
+            ConnectionUtil.closeConnection(connection);
+        }
+    }
+
 }
