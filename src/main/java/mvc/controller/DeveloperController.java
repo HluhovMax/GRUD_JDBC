@@ -26,7 +26,11 @@ public class DeveloperController {
         return developers;
     }
 
-    public void delete(Integer id){
+    public void delete(Integer id) {
         developerService.deleteFromDeveloperRepo(id);
+    }
+
+    public void insert(Developer developer) {
+        developerService.insertIntoDeveloperRepo(developer);
     }
 }

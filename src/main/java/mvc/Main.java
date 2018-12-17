@@ -8,9 +8,6 @@ import mvc.view.ConsoleHelper;
 
 public class Main {
     public static void main(String[] args) {
-        //ConsoleHelper.run();
-        ProjectRepoImpl projectRepo = new ProjectRepoImpl();
-
-        projectRepo.insert(new Project(1, "Enterprise Project", 5000));
+        ConsoleHelper.run();
     }
 }

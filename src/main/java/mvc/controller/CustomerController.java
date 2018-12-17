@@ -29,4 +29,8 @@ public class CustomerController {
     public void delete(Integer id) {
         customerService.deleteFromCustomerRepo(id);
     }
+
+    public void insert(Customer customer) {
+        customerService.insertIntoCustomerRepo(customer);
+    }
 }

@@ -29,4 +29,8 @@ public class CompanyController {
     public void delete(Integer id) {
         companyService.deleteFromCompanyRepo(id);
     }
+
+    public void insert(Company company) {
+        companyService.insertIntoCompanyRepo(company);
+    }
 }

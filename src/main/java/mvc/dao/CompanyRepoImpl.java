@@ -40,7 +40,7 @@ public class CompanyRepoImpl implements CompanyRepository {
 
     @Override
     public Company getById(Integer id) {
-        String SQL = "SELECT * FROM company WHERE id = ?";
+        String SQL = "SELECT * FROM company LEFT JOIN company_customer cc on company.id = ?";
         try {
             preparedStatement = connection.prepareStatement(SQL);
             preparedStatement.setInt(1, id);
@@ -153,8 +153,49 @@ public class CompanyRepoImpl implements CompanyRepository {
         }
     }
 
-    public void insertIntoCommonTable() {
+    public void insertCustomerToCompany(Company company) {
+        String COMPANY_CUSTOMER = "INSERT INTO company_customer(company_id, customer_id)" +
+                "VALUES (?, ?)";
+        try {
+            preparedStatement = connection.prepareStatement(COMPANY_CUSTOMER);
+            preparedStatement.setInt(1, company.getId());
+            preparedStatement.setInt(2, company.getCustomer().getId());
+            preparedStatement.execute();
 
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }finally {
+            if (preparedStatement != null) {
+                try {
+                    preparedStatement.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
+            ConnectionUtil.closeConnection(connection);
+        }
+    }
+
+    public void insertProjectToCompany(Company company) {
+        String COMPANY_PROJECT = "INSERT INTO company_project (company_id, project_id)" +
+                "VALUES (?, ?)";
+        try {
+            preparedStatement = connection.prepareStatement(COMPANY_PROJECT);
+            preparedStatement.setInt(1, company.getId());
+            preparedStatement.setInt(2, company.getProject().getId());
+            preparedStatement.execute();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }finally {
+            if (preparedStatement != null) {
+                try {
+                    preparedStatement.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
+            ConnectionUtil.closeConnection(connection);
+        }
     }
 
 }

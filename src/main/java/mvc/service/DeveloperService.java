@@ -29,4 +29,8 @@ public class DeveloperService {
     public void deleteFromDeveloperRepo(Integer id) {
         developerRepoImpl.delete(id);
     }
+
+    public void insertIntoDeveloperRepo(Developer developer) {
+        developerRepoImpl.insertSkillsForDeveloper(developer);
+    }
 }

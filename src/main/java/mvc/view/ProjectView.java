@@ -1,6 +1,8 @@
 package mvc.view;
 
 import mvc.controller.ProjectController;
+import mvc.model.Company;
+import mvc.model.Developer;
 import mvc.model.Project;
 
 import java.util.List;
@@ -13,9 +15,13 @@ public class ProjectView {
     private Project project = new Project();
 
     public void save() {
-        System.out.println("enter project name, cost:");
+        Company company = new Company();
+        System.out.println("enter project id, name, company");
+        project.setId(intScanner.nextInt());
         project.setProject(stringScanner.nextLine());
-        project.setCost(intScanner.nextInt());
+        System.out.println("enter company id:");
+        company.setId(intScanner.nextInt());
+        project.setCompany(company);
         if (project != null) {
             projectController.save(project);
         }
@@ -56,5 +62,16 @@ public class ProjectView {
     public void delete() {
         System.out.println("enter id:");
         projectController.delete(intScanner.nextInt());
+    }
+
+    public void insert() {
+        System.out.println("enter project_id, developer_id");
+        project.setId(intScanner.nextInt());
+        Developer developer = new Developer();
+        developer.setId(intScanner.nextInt());
+        project.setDeveloper(developer);
+        if (project != null) {
+            projectController.insert(project);
+        }
     }
 }

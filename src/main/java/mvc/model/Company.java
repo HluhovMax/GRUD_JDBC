@@ -5,8 +5,8 @@ import java.util.List;
 public class Company {
     private int id;
     private String company;
-    private List<Project> projects;
-    private List<Customer> customers;
+    private Customer customer;
+    private Project project;
 
     public Company() {
     }
@@ -28,20 +28,20 @@ public class Company {
         this.company = company;
     }
 
-    public List<Project> getProjects() {
-        return projects;
+    public Customer getCustomer() {
+        return customer;
     }
 
-    public void setProjects(List<Project> projects) {
-        this.projects = projects;
+    public void setCustomer(Customer customer) {
+        this.customer = customer;
     }
 
-    public List<Customer> getCustomers() {
-        return customers;
+    public Project getProject() {
+        return project;
     }
 
-    public void setCustomers(List<Customer> customers) {
-        this.customers = customers;
+    public void setProject(Project project) {
+        this.project = project;
     }
 
     @Override
@@ -49,8 +49,8 @@ public class Company {
         return "Company{" +
                 "id=" + id +
                 ", company='" + company + '\'' +
-                ", projects=" + projects +
-                ", customers=" + customers +
+                ", customer=" + customer +
+                ", project=" + project +
                 '}';
     }
 }

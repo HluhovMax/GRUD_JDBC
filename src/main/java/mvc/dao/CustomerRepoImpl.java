@@ -40,7 +40,7 @@ public class CustomerRepoImpl implements CustomerRepository {
 
     @Override
     public Customer getById(Integer id) {
-        String SQL = "SELECT * FROM customer WHERE id = ?";
+        String SQL = "SELECT * FROM customer LEFT JOIN company_customer cc on customer.id = ?";
         try {
             preparedStatement = connection.prepareStatement(SQL);
             preparedStatement.setInt(1, id);
@@ -138,6 +138,28 @@ public class CustomerRepoImpl implements CustomerRepository {
         try {
             preparedStatement = connection.prepareStatement(SQL);
             preparedStatement.setInt(1, id);
+            preparedStatement.execute();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }finally {
+            if (preparedStatement != null) {
+                try {
+                    preparedStatement.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
+            ConnectionUtil.closeConnection(connection);
+        }
+    }
+
+    public void insertProjectToCustomer(Customer customer) {
+        String CUSTOMER_PROJECT = "INSERT INTO customer_project (customer_id, project_id)" +
+                "VALUES (?, ?)";
+        try {
+            preparedStatement = connection.prepareStatement(CUSTOMER_PROJECT);
+            preparedStatement.setInt(1, customer.getId());
+            preparedStatement.setInt(2, customer.getProject().getId());
             preparedStatement.execute();
         } catch (SQLException e) {
             e.printStackTrace();

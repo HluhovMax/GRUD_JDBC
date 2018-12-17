@@ -2,6 +2,7 @@ package mvc.view;
 
 import mvc.controller.CustomerController;
 import mvc.model.Customer;
+import mvc.model.Project;
 import mvc.service.CustomerService;
 
 import java.util.List;
@@ -55,5 +56,16 @@ public class CustomerView {
     public void delete() {
         System.out.println("enter id:");
         customerController.delete(intScanner.nextInt());
+    }
+
+    public void insert() {
+        System.out.println("enter customer_id, project_id");
+        customer.setId(intScanner.nextInt());
+        Project project = new Project();
+        project.setId(intScanner.nextInt());
+        customer.setProject(project);
+        if (customer != null) {
+            customerController.insert(customer);
+        }
     }
 }

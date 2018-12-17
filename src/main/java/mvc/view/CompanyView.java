@@ -2,6 +2,8 @@ package mvc.view;
 
 import mvc.controller.CompanyController;
 import mvc.model.Company;
+import mvc.model.Customer;
+import mvc.model.Project;
 
 
 import java.util.List;
@@ -55,5 +57,19 @@ public class CompanyView {
     public void delete() {
         System.out.println("enter id:");
         companyController.delete(intScanner.nextInt());
+    }
+
+    public void insert() {
+        System.out.println("enter company_id, customer_id, project_id");
+        company.setId(intScanner.nextInt());
+        Customer customer = new Customer();
+        customer.setId(intScanner.nextInt());
+        Project project = new Project();
+        project.setId(intScanner.nextInt());
+        company.setCustomer(customer);
+        company.setProject(project);
+        if (company != null) {
+            companyController.insert(company);
+        }
     }
 }

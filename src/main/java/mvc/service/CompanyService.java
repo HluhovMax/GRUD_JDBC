@@ -29,4 +29,11 @@ public class CompanyService {
     public void deleteFromCompanyRepo(Integer id) {
         companyRepoImpl.delete(id);
     }
+
+    public void insertIntoCompanyRepo(Company company) {
+        companyRepoImpl.insertCustomerToCompany(company);
+        companyRepoImpl.insertProjectToCompany(company);
+    }
+
+
 }

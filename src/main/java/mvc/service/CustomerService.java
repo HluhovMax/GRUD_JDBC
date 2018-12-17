@@ -29,4 +29,8 @@ public class CustomerService {
     public void deleteFromCustomerRepo(Integer id) {
         customerRepoImpl.delete(id);
     }
+
+    public void insertIntoCustomerRepo(Customer customer) {
+        customerRepoImpl.insertProjectToCustomer(customer);
+    }
 }

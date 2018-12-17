@@ -7,7 +7,7 @@ public class Project {
     private int id;
     private String project;
     private Company company;
-    private List<Developer> developers;
+    private Developer developer;
     private int cost;
 
     public Project() {
@@ -46,12 +46,12 @@ public class Project {
         this.company = company;
     }
 
-    public List<Developer> getDevelopers() {
-        return developers;
+    public Developer getDeveloper() {
+        return developer;
     }
 
-    public void setDevelopers(List<Developer> developers) {
-        this.developers = developers;
+    public void setDeveloper(Developer developer) {
+        this.developer = developer;
     }
 
     @Override
@@ -60,7 +60,7 @@ public class Project {
                 "id=" + id +
                 ", project='" + project + '\'' +
                 ", company=" + company +
-                ", developers=" + developers +
+                ", developer=" + developer +
                 ", cost=" + cost +
                 '}';
     }

@@ -2,6 +2,7 @@ package mvc.dao;
 
 import mvc.dao.repository.DeveloperRepository;
 import mvc.model.Developer;
+import mvc.model.Skill;
 import mvc.util.ConnectionUtil;
 
 
@@ -43,18 +44,22 @@ public class DeveloperRepoImpl implements DeveloperRepository {
 
     @Override
     public Developer getById(Integer id) {
-        String SQL = "SELECT * FROM developer WHERE id = ?";
+        String SQL = "SELECT * FROM developer, skills" +
+                " LEFT JOIN developer_skill ds on developer.id = ?";
         try {
             preparedStatement = connection.prepareStatement(SQL);
             preparedStatement.setInt(1, id);
             resultSet = preparedStatement.executeQuery();
             Developer developer = new Developer();
+            Skill skill = new Skill();
             while (resultSet.next()) {
                 developer.setId(resultSet.getInt("id"));
                 developer.setName(resultSet.getString("name"));
                 developer.setSpecialty(resultSet.getString("specialty"));
                 developer.setExperience(resultSet.getInt("experience"));
                 developer.setSalary(resultSet.getInt("salary"));
+                skill.setSkill(resultSet.getString("skill"));
+                developer.setSkill(skill);
                 return developer;
             }
         } catch (SQLException e) {
@@ -150,6 +155,28 @@ public class DeveloperRepoImpl implements DeveloperRepository {
         try {
             preparedStatement = connection.prepareStatement(SQL);
             preparedStatement.setInt(1, id);
+            preparedStatement.execute();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }finally {
+            if (preparedStatement != null) {
+                try {
+                    preparedStatement.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
+            ConnectionUtil.closeConnection(connection);
+        }
+    }
+
+    public void insertSkillsForDeveloper(Developer developer) {
+        String DEVELOPER_SKILLS = "INSERT INTO developer_skill(developer_id, skill_id)" +
+                "VALUES (?, ?) ";
+        try {
+            preparedStatement = connection.prepareStatement(DEVELOPER_SKILLS);
+            preparedStatement.setInt(1, developer.getId());
+            preparedStatement.setInt(2, developer.getSkill().getId());
             preparedStatement.execute();
         } catch (SQLException e) {
             e.printStackTrace();

@@ -2,16 +2,24 @@ package mvc.view;
 
 import mvc.controller.DeveloperController;
 import mvc.model.Developer;
+import mvc.model.Skill;
 
 
 import java.util.List;
 import java.util.Scanner;
 
 public class DeveloperView {
-    private DeveloperController developerController = new DeveloperController();
-    private Scanner intScanner = new Scanner(System.in);
-    private Scanner stringScanner = new Scanner(System.in);
-    private Developer developer = new Developer();
+    private DeveloperController developerController ;
+    private Scanner intScanner ;
+    private Scanner stringScanner;
+    private Developer developer;
+
+    public DeveloperView() {
+        developerController = new DeveloperController();
+        intScanner = new Scanner(System.in);
+        stringScanner = new Scanner(System.in);
+        developer = new Developer();
+    }
 
     public void save() {
         System.out.println("enter name, specialty, experience, salary");
@@ -61,5 +69,14 @@ public class DeveloperView {
     public void delete() {
         System.out.println("enter id:");
         developerController.delete(intScanner.nextInt());
+    }
+
+    public void insert() {
+        System.out.println("enter developer_id, skill_id");
+        developer.setId(intScanner.nextInt());
+        Skill skill = new Skill();
+        skill.setId(intScanner.nextInt());
+        developer.setSkill(skill);
+        developerController.insert(developer);
     }
 }

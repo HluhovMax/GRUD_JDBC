@@ -29,4 +29,8 @@ public class ProjectService {
     public void deleteFromProjectRepo(Integer id) {
         projectRepoImpl.delete(id);
     }
+
+    public void insertIntoProjectRepo(Project project) {
+        projectRepoImpl.insert(project);
+    }
 }

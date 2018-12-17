@@ -25,7 +25,6 @@ public class ProjectRepoImpl implements ProjectRepository {
             preparedStatement.setString(1, project.getProject());
             preparedStatement.setInt(2, project.getCost());
             preparedStatement.execute();
-
         } catch (SQLException e) {
             e.printStackTrace();
         }finally {
@@ -42,7 +41,7 @@ public class ProjectRepoImpl implements ProjectRepository {
 
     @Override
     public Project getById(Integer id) {
-        String SQL = "SELECT * FROM project WHERE id = ?";
+        String SQL = "SELECT * FROM project LEFT JOIN company_project cp on project.id = ?";
         try {
             preparedStatement = connection.prepareStatement(SQL);
             preparedStatement.setInt(1, id);
@@ -159,21 +158,12 @@ public class ProjectRepoImpl implements ProjectRepository {
     }
 
     public void insert(Project project) {
-        String COMPANY_PROJECT_SQL = "INSERT INTO company_project(project_id) VALUES(?)";
-        String CUSTOMER_PROJECT_SQL = "INSERT INTO  customer_project(project_id) VALUES (?)";
-        String PROJECT_DEVELOPER_SQL = "INSERT INTO project_developer(project_id) VALUES (?)";
+        String PROJECT_DEVELOPER_SQL = "INSERT INTO project_developer(project_id, developer_id) VALUES (?,?)";
         try {
-            connection.setAutoCommit(false);
-            preparedStatement = connection.prepareStatement(COMPANY_PROJECT_SQL);
-            preparedStatement.setInt(1, project.getId());
-            preparedStatement.execute();
-            preparedStatement = connection.prepareStatement(CUSTOMER_PROJECT_SQL);
-            preparedStatement.setInt(1, project.getId());
-            preparedStatement.execute();
             preparedStatement = connection.prepareStatement(PROJECT_DEVELOPER_SQL);
             preparedStatement.setInt(1, project.getId());
+            preparedStatement.setInt(2, project.getDeveloper().getId());
             preparedStatement.execute();
-            connection.commit();
         } catch (SQLException e) {
             e.printStackTrace();
         }finally {

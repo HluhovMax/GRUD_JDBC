@@ -29,4 +29,8 @@ public class ProjectController {
     public void delete(Integer id){
         projectService.deleteFromProjectRepo(id);
     }
+
+    public void insert(Project project) {
+        projectService.insertIntoProjectRepo(project);
+    }
 }

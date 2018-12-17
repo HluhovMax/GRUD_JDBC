@@ -14,7 +14,7 @@ public class SkillView {
     private Skill skill = new Skill();
 
     public void save() {
-        System.out.println("enter customer name:");
+        System.out.println("enter skill name:");
         skill.setSkill(stringScanner.nextLine());
         if (skill != null) {
             skillController.save(skill);
