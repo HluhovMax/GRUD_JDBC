@@ -1,5 +1,6 @@
 package mvc.repository;
 
+import mvc.model.Project;
 import mvc.repository.jdbc.CustomerRepository;
 import mvc.model.Customer;
 import mvc.util.ConnectionUtil;
@@ -19,11 +20,19 @@ public class CustomerRepoImpl implements CustomerRepository {
 
     @Override
     public void save(Customer customer) {
-        String SQL = "INSERT INTO customer(customer) VALUES(?) ";
+        String SQL = "INSERT INTO customer(id, customer) VALUES(?, ?) ";
+        insertProjectToCustomer(customer);
+        ProjectRepoImpl projectRepo = new ProjectRepoImpl();
+        List<Project> projects = customer.getProjects();
+        for (Project project : projects
+        ) {
+            projectRepo.save(project);
+        }
         try {
             connection = ConnectionUtil.getConnection();
             preparedStatement = connection.prepareStatement(SQL);
-            preparedStatement.setString(1, customer.getCustomer());
+            preparedStatement.setInt(1, customer.getId());
+            preparedStatement.setString(2, customer.getCustomer());
             preparedStatement.execute();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -41,17 +50,31 @@ public class CustomerRepoImpl implements CustomerRepository {
 
     @Override
     public Customer getById(Integer id) {
-        String SQL = "SELECT * FROM customer LEFT JOIN company_customer cc on customer.id = ?";
+        String SQL = "SELECT *\n" +
+                "FROM (\n" +
+                "  SELECT customer.id, customer.customer, cp.project_id, p.project\n" +
+                "       FROM customer\n" +
+                "  LEFT JOIN customer_project cp on cp.customer_id = customer.id\n" +
+                "  LEFT JOIN project p on cp.project_id = p.id) result\n" +
+                "WHERE result.id = ?";
         try {
             connection = ConnectionUtil.getConnection();
             preparedStatement = connection.prepareStatement(SQL);
             preparedStatement.setInt(1, id);
             resultSet = preparedStatement.executeQuery();
-            Customer company = new Customer();
+            List<Project> projects = new ArrayList<>();
             while (resultSet.next()) {
-                company.setId(resultSet.getInt("id"));
-                company.setCustomer(resultSet.getString("customer"));
-                return company;
+                Project project = new Project();
+                project.setId(resultSet.getInt("project_id"));
+                project.setProject(resultSet.getString("project"));
+                projects.add(project);
+            }
+            Customer customer = new Customer();
+            while (resultSet.first()) {
+                customer.setId(resultSet.getInt("id"));
+                customer.setCustomer(resultSet.getString("customer"));
+                customer.setProjects(projects);
+                return customer;
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -158,14 +181,19 @@ public class CustomerRepoImpl implements CustomerRepository {
         }
     }
 
-    public void insertProjectToCustomer(Customer customer) {
+    private void insertProjectToCustomer(Customer customer) {
         String CUSTOMER_PROJECT = "INSERT INTO customer_project (customer_id, project_id)" +
                 "VALUES (?, ?)";
         try {
-            preparedStatement = connection.prepareStatement(CUSTOMER_PROJECT);
-            preparedStatement.setInt(1, customer.getId());
-            preparedStatement.setInt(2, customer.getProject().getId());
-            preparedStatement.execute();
+            List<Project> projects = customer.getProjects();
+            for (Project project : projects
+            ) {
+                connection = ConnectionUtil.getConnection();
+                preparedStatement = connection.prepareStatement(CUSTOMER_PROJECT);
+                preparedStatement.setInt(1, customer.getId());
+                preparedStatement.setInt(2, project.getId());
+                preparedStatement.execute();
+            }
         } catch (SQLException e) {
             e.printStackTrace();
         }finally {

@@ -41,7 +41,7 @@ public class ProjectView {
         System.out.println("enter id, project, cost");
         project.setId(intScanner.nextInt());
         project.setProject(stringScanner.nextLine());
-        project.setCost(intScanner.nextInt());
+        //project.setCost(intScanner.nextInt());
         if (project != null) {
             projectController.update(project);
         }

@@ -8,7 +8,6 @@ public class Project {
     private String project;
     private Company company;
     private List<Developer> developers;
-    private int cost;
 
     public Project() {
     }
@@ -28,14 +27,6 @@ public class Project {
 
     public void setProject(String project) {
         this.project = project;
-    }
-
-    public int getCost() {
-        return cost;
-    }
-
-    public void setCost(int cost) {
-        this.cost = cost;
     }
 
     public Company getCompany() {
@@ -61,7 +52,6 @@ public class Project {
                 ", project='" + project + '\'' +
                 ", company=" + company +
                 ", developers=" + developers +
-                ", cost=" + cost +
                 '}';
     }
 }

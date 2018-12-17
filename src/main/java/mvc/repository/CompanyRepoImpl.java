@@ -59,21 +59,65 @@ public class CompanyRepoImpl implements CompanyRepository {
 
     @Override
     public Company getById(Integer id) {
-        String SQL = "SELECT * FROM company LEFT JOIN company_customer cc on company.id = ?";
+        String COMPANY_PROJECT_SQL = "SELECT *\n" +
+                "FROM (\n" +
+                "            SELECT company.id, company.company, cp.project_id, p.project\n" +
+                "  FROM company\n" +
+                "  LEFT JOIN company_project cp on cp.company_id = company.id\n" +
+                "  LEFT JOIN project p on cp.project_id = p.id\n" +
+                "     ) result\n" +
+                "WHERE result.id = ?";
+        String COMPANY_CUSTOMER_SQL = "SELECT *\n" +
+                "FROM\n" +
+                "(\n" +
+                "SELECT company.id, company.company, cc.customer_id, c.customer\n" +
+                "FROM company\n" +
+                "LEFT JOIN company_customer cc on cc.company_id = company.id\n" +
+                "LEFT JOIN customer c on cc.customer_id = c.id) result\n" +
+                "WHERE result.id = ?";
         try {
             connection = ConnectionUtil.getConnection();
-            preparedStatement = connection.prepareStatement(SQL);
+            preparedStatement = connection.prepareStatement(COMPANY_PROJECT_SQL);
             preparedStatement.setInt(1, id);
             resultSet = preparedStatement.executeQuery();
-            Company company = new Company();
+            List<Project> projects = new ArrayList<>();
             while (resultSet.next()) {
+                Project project = new Project();
+                project.setId(resultSet.getInt("project_id"));
+                project.setProject(resultSet.getString("project"));
+                Company company = new Company();
                 company.setId(resultSet.getInt("id"));
                 company.setCompany(resultSet.getString("company"));
+                project.setCompany(company);
+                DeveloperRepoImpl developerRepo = new DeveloperRepoImpl();
+                project.setDevelopers(developerRepo.getAll());
+                projects.add(project);
+            }
+            Connection conn = ConnectionUtil.getConnection();
+            PreparedStatement statement = conn.prepareStatement(COMPANY_CUSTOMER_SQL);
+            statement.setInt(1, id);
+            ResultSet set = statement.executeQuery();
+            List<Customer> customers = new ArrayList<>();
+            while (set.next()) {
+                Customer customer = new Customer();
+                customer.setId(set.getInt("customer_id"));
+                customer.setCustomer(set.getString("customer"));
+                ProjectRepoImpl projectRepo = new ProjectRepoImpl();
+                customer.setProjects(projectRepo.getAll());
+                customers.add(customer);
+            }
+            Company company = new Company();
+            while (resultSet.first()) {
+                company.setId(resultSet.getInt("id"));
+                company.setCompany(resultSet.getString("company"));
+                company.setProjects(projects);
+                company.setCustomers(customers);
                 return company;
             }
         } catch (SQLException e) {
             e.printStackTrace();
         } finally {
+
             if (preparedStatement != null) {
                 try {
                     preparedStatement.close();

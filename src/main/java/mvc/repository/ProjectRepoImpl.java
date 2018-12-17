@@ -1,5 +1,6 @@
 package mvc.repository;
 
+import mvc.model.Developer;
 import mvc.repository.jdbc.ProjectRepository;
 import mvc.model.Project;
 import mvc.util.ConnectionUtil;
@@ -19,12 +20,19 @@ public class ProjectRepoImpl implements ProjectRepository {
 
     @Override
     public void save(Project project) {
-        String SQL = "INSERT INTO project(project, cost) VALUES(?, ?) ";
+        String SQL = "INSERT INTO project(id, project) VALUES(?, ?) ";
+        insertDeveloperToProject(project);
+        DeveloperRepoImpl developerRepo = new DeveloperRepoImpl();
+        List<Developer> developers = project.getDevelopers();
+        for (Developer developer : developers
+        ) {
+            developerRepo.save(developer);
+        }
         try {
             connection = ConnectionUtil.getConnection();
             preparedStatement = connection.prepareStatement(SQL);
-            preparedStatement.setString(1, project.getProject());
-            preparedStatement.setInt(2, project.getCost());
+            preparedStatement.setInt(1, project.getId());
+            preparedStatement.setString(2, project.getProject());
             preparedStatement.execute();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -42,17 +50,33 @@ public class ProjectRepoImpl implements ProjectRepository {
 
     @Override
     public Project getById(Integer id) {
-        String SQL = "SELECT * FROM project LEFT JOIN company_project cp on project.id = ?";
+        String SQL = "SELECT *\n" +
+                "FROM (\n" +
+                "       SELECT project.id, project.project, pd.developer_id, d.name, d.specialty, d.experience, d.salary\n" +
+                "       FROM project\n" +
+                "              LEFT JOIN project_developer pd on pd.project_id = project.id\n" +
+                "  LEFT JOIN developer d on pd.developer_id = d.id) result\n" +
+                "WHERE result.id = ?";
         try {
             connection = ConnectionUtil.getConnection();
             preparedStatement = connection.prepareStatement(SQL);
             preparedStatement.setInt(1, id);
             resultSet = preparedStatement.executeQuery();
-            Project project = new Project();
+            List<Developer> developers = new ArrayList<>();
             while (resultSet.next()) {
+                Developer developer = new Developer();
+                developer.setId(resultSet.getInt("developer_id"));
+                developer.setName(resultSet.getString("name"));
+                developer.setSpecialty(resultSet.getString("specialty"));
+                developer.setExperience(resultSet.getInt("experience"));
+                developer.setSalary(resultSet.getInt("salary"));
+                developers.add(developer);
+            }
+            Project project = new Project();
+            while (resultSet.first()) {
                 project.setId(resultSet.getInt("id"));
                 project.setProject(resultSet.getString("project"));
-                project.setCost(resultSet.getInt("cost"));
+                project.setDevelopers(developers);
                 return project;
             }
         } catch (SQLException e) {
@@ -84,7 +108,7 @@ public class ProjectRepoImpl implements ProjectRepository {
             connection = ConnectionUtil.getConnection();
             preparedStatement = connection.prepareStatement(SQL);
             preparedStatement.setString(1, project.getProject());
-            preparedStatement.setInt(2, project.getCost());
+            //preparedStatement.setInt(2, project.getCost());
             preparedStatement.setInt(3, project.getId());
             preparedStatement.execute();
 
@@ -114,7 +138,7 @@ public class ProjectRepoImpl implements ProjectRepository {
                 Project project = new Project();
                 project.setId(resultSet.getInt("id"));
                 project.setProject(resultSet.getString("project"));
-                project.setCost(resultSet.getInt("cost"));
+               // project.setCost(resultSet.getInt("cost"));
                 projects.add(project);
             }
             return projects;
@@ -162,14 +186,18 @@ public class ProjectRepoImpl implements ProjectRepository {
         }
     }
 
-    public void insert(Project project) {
+    private void insertDeveloperToProject(Project project) {
         String PROJECT_DEVELOPER_SQL = "INSERT INTO project_developer(project_id, developer_id) VALUES (?,?)";
         try {
-            connection = ConnectionUtil.getConnection();
-            preparedStatement = connection.prepareStatement(PROJECT_DEVELOPER_SQL);
-            preparedStatement.setInt(1, project.getId());
-            preparedStatement.setInt(2, project.getDeveloper().getId());
-            preparedStatement.execute();
+            List<Developer> developers = project.getDevelopers();
+            for (Developer developer : developers
+            ) {
+                connection = ConnectionUtil.getConnection();
+                preparedStatement = connection.prepareStatement(PROJECT_DEVELOPER_SQL);
+                preparedStatement.setInt(1, project.getId());
+                preparedStatement.setInt(2, developer.getId());
+                preparedStatement.execute();
+            }
         } catch (SQLException e) {
             e.printStackTrace();
         }finally {
